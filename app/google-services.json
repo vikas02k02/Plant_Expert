@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "614053674252",
+    "project_id": "plantexpert-27006",
+    "storage_bucket": "plantexpert-27006.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614053674252:android:704b4c228414509ab45d29",
+        "android_client_info": {
+          "package_name": "com.plantExpert"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByuqV5rLOmQwk6uICcRkfzy06PXMoQbUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

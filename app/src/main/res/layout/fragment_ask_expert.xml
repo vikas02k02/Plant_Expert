@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="30dp"
+            tools:context=".UI.AskExpertFragment">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/detect_bot_nav_item1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="30dp"
+                android:text="Enter Plant Name"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/PlantName"
+                    android:inputType="text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Plant Name (Cotton)" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/cityName"
+                    android:inputType="text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="City (Rewari)" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="15dp"
+                android:text="Enter Plant field City"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="15dp"
+                android:text="Click Record and Explain Your Problem"
+                android:textSize="20sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/RecordVoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/mic_record"
+                android:text="Record Voice"
+                android:drawablePadding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView5"
+                />
+
+            <Button
+                android:id="@+id/sendData"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="30dp"
+                android:text="Send"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/blue"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/RecordVoice"
+                app:strokeColor="@color/blue" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+    <View
+        android:id="@+id/ProcessView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#A4DDDDDD"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/ProgressView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@color/white"
+        android:layout_margin="60dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:outlineSpotShadowColor="@color/blue"
+            android:outlineAmbientShadowColor="@color/blue"
+            android:layout_weight="1" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sending ...."
+            android:layout_marginStart="30dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/responseView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="#5CD17D"
+        android:layout_margin="30dp"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/responseMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="3"
+            android:text="Your Problem has been recorded ,\t\nYou will soon receive your solution\t\nunder Solutions Tab"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/OK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
