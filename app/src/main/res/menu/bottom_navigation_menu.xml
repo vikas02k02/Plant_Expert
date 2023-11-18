@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/item1"
+        android:title="Detect"
+        android:icon="@drawable/detect_bot_nav_item1"/>
+    <item android:id="@+id/item2"
+        android:title="Ask Expert"
+        android:icon="@drawable/ask_expert_bot_nav_item2"/>
+    <item android:id="@+id/item3"
+        android:title="Solutions"
+        android:icon="@drawable/solution_bot_nav_item3"/>
+    <item android:id="@+id/item4"
+        android:title="Profile"
+        android:icon="@drawable/profile_bot_nav_item4"/>
+
+</menu>
