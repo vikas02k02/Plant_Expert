@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.plantExpert.UI.AskExpertFragment;
 import com.plantExpert.UI.DetectFragment;
 import com.plantExpert.UI.ProfileFragment;
@@ -43,20 +44,16 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if(item.getItemId() == R.id.item1){
-                Toast.makeText(this, "Detect Screen Invoked", Toast.LENGTH_SHORT).show();
                 openFragment(new DetectFragment());
                 return true;
             } else if (item.getItemId() == R.id.item2) {
-                Toast.makeText(this, "Ask Expert Screen Invoked", Toast.LENGTH_SHORT).show();
                 openFragment(new AskExpertFragment());
                 return true;
             } else if (item.getItemId() == R.id.item3) {
-                Toast.makeText(this, "Solutions Screen Invoked", Toast.LENGTH_SHORT).show();
                 openFragment(new SolutionsFragment());
                 return true;
                 
             } else if (item.getItemId() == R.id.item4) {
-                Toast.makeText(this, "Profile Screen Invoked", Toast.LENGTH_SHORT).show();
                 openFragment(new ProfileFragment());
                return true;
             }
@@ -80,9 +77,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         int id  = item.getItemId();
         if (id == R.id.logOut){
+            FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(getApplicationContext(), Authentication.class);
             startActivity(intent);
             finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

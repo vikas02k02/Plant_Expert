@@ -1,17 +1,8 @@
 package com.plantExpert.Validation;
 
-import static com.plantExpert.R.drawable.solution_button_pending;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,52 +14,40 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.Firebase;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
-import com.google.firebase.auth.PhoneAuthProvider;
-import com.hbb20.CountryCodePicker;
 import com.plantExpert.MainActivity;
 import com.plantExpert.R;
 
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public class Authentication extends AppCompatActivity {
-    View authView ;
-    LinearLayout OtpView ;
-    TextInputEditText mobileNumber ,OTP;
-    Button getOTP , Submit ;
-    TextView resend ;
-    String PhoneNumber ,SelectedRole ,verificationID ;
-    final String regexStr = "^(?:(?:\\+|0{0,2})91(\\s*[\\-]\\s*)?|[0]?)?[6789]\\d{9}$";
-    int REQUEST_PERMISSION_CODE =100;
-    RadioGroup radioGroup;
-    FirebaseAuth mAuth;
+    private View LoginView;
+    private LinearLayout ProgressBarView;
+    private TextInputEditText mobileNumber, LoginPassword;
+    private RadioGroup radioGroup;
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
+
+        // Initialize Firebase
+        FirebaseApp.initializeApp(this);
+
         mobileNumber = findViewById(R.id.mobileNumber);
-        getOTP = findViewById(R.id.getOTP);
-        authView = findViewById(R.id.AuthView);
-        OtpView = findViewById(R.id.OTPView);
-        OTP = findViewById(R.id.setOTP);
-        Submit = findViewById(R.id.submit);
-        resend = findViewById(R.id.ResendOTP);
+        LoginPassword=findViewById(R.id.LoginPassword);
         radioGroup = findViewById(R.id.radio);
+        Button loginButton = findViewById(R.id.LoginUser);
+        TextView newUserRegister = findViewById(R.id.NewUser);
+        LoginView=findViewById(R.id.LoginView);
+        ProgressBarView = findViewById(R.id.progressBarView);
 
         mAuth = FirebaseAuth.getInstance();
-        if( ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)!= PackageManager.PERMISSION_GRANTED ){
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.SEND_SMS}, REQUEST_PERMISSION_CODE);
-        }
 
         mobileNumber.addTextChangedListener(new TextWatcher() {
             @Override
@@ -85,171 +64,110 @@ public class Authentication extends AppCompatActivity {
                 checkConditionsAndEnableButton();
             }
         });
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            checkConditionsAndEnableButton();
-        });
-        OTP.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+        LoginPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                boolean Flag = !TextUtils.isEmpty(OTP.getText().toString());
-                if(Flag){
-                    Submit.setTextColor(getResources().getColor(R.color.white));
-                    Submit.setBackgroundColor(getResources().getColor(R.color.blue));
-                }else {
-                    Submit.setTextColor(getResources().getColor(R.color.white));
-                    Submit.setBackgroundColor(getResources().getColor(R.color.grey));
-                    Submit.setEnabled(false);
-                }
-                Submit.setEnabled(Flag);
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                checkConditionsAndEnableButton();
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                boolean Flag = !TextUtils.isEmpty(OTP.getText().toString());
-                if(Flag){
-                    Submit.setTextColor(getResources().getColor(R.color.white));
-                    Submit.setBackgroundColor(getResources().getColor(R.color.blue));
-                }else {
-                    Submit.setTextColor(getResources().getColor(R.color.white));
-                    Submit.setBackgroundColor(getResources().getColor(R.color.grey));
-                    Submit.setEnabled(false);
-                }
-                Submit.setEnabled(Flag);
-
+                checkConditionsAndEnableButton();
             }
         });
 
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> checkConditionsAndEnableButton());
 
-        getOTP.setOnClickListener(view -> {
-            PhoneNumber = Objects.requireNonNull(mobileNumber.getText()).toString();
-            if(!PhoneNumber.matches(regexStr)){
-                mobileNumber.setError("Enter Valid Number");
+
+        loginButton.setOnClickListener(view -> {
+            String PhoneNumber = Objects.requireNonNull(mobileNumber.getText()).toString();
+            String Password = Objects.requireNonNull(LoginPassword.getText()).toString();
+            RadioButton selectedRadioButton = findViewById(radioGroup.getCheckedRadioButtonId());
+            String SelectedRole = selectedRadioButton.getText().toString();
+            LoginView.setVisibility(View.VISIBLE);
+            ProgressBarView.setVisibility(View.VISIBLE);
+            if (SelectedRole.equals("Farmer")){
+                LoginFarmer(PhoneNumber+"@farmer.com" , Password);
+            } else if (SelectedRole.equals("Plant Expert")) {
+                LoginPlantExpert(PhoneNumber+"@expert.com",Password);
+            }
+
+        });
+
+        newUserRegister.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), Registration.class);
+            startActivity(intent);
+            finish();
+        });
+
+    }
+
+    private void LoginPlantExpert(String s, String password) {
+        mAuth.signInWithEmailAndPassword(s,password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                LoginView.setVisibility(View.GONE);
+                ProgressBarView.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(),"Login Successful : Work In Progress ",Toast.LENGTH_LONG).show();
+//                    Handler handler= new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                    },1500);
             }else {
-                int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-                RadioButton selectedRadioButton = findViewById(selectedRadioButtonId);
-                SelectedRole = selectedRadioButton.getText().toString();
-                authView.setVisibility(View.VISIBLE);
-                OtpView.setVisibility(View.VISIBLE);
-                sendVerificationCode(PhoneNumber);
-                Toast.makeText(Authentication.this,PhoneNumber +SelectedRole,Toast.LENGTH_LONG).show();
+                LoginView.setVisibility(View.GONE);
+                ProgressBarView.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(),Toast.LENGTH_LONG).show();
             }
-
         });
+    }
 
-        Submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(SelectedRole.equals("Farmer")){
+    private void LoginFarmer(String s, String password) {
+        mAuth.signInWithEmailAndPassword(s,password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                LoginView.setVisibility(View.GONE);
+                ProgressBarView.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(),"Login Successful : WELCOME BACK ",Toast.LENGTH_LONG).show();
+                Handler handler= new Handler();
+                handler.postDelayed(() -> {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
-                }else {
-//                    Add the Plant Expert Class Activity
-//                    Intent intent = new Intent(getApplicationContext(), PlantExpert.class);
-//                    startActivity(intent);
-                }
-                String otp = OTP.getText().toString();
-//                verifyPhone(otp);
-            }
-        });
-
-
-    }
-
-    private void sendVerificationCode(String phoneNumber) {
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth).setPhoneNumber("+91"+phoneNumber)
-                .setTimeout(60L, TimeUnit.SECONDS)
-                .setActivity(this)
-                .setCallbacks(mCallbacks)
-                .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-    }
-
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        @Override
-        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-            final String code = phoneAuthCredential.getSmsCode();
-            if(code!=null){
-                verifyPhone(code);
-            }
-        }
-
-        @Override
-        public void onVerificationFailed(@NonNull FirebaseException e) {
-            Toast.makeText(Authentication.this, "Verification Failed", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onCodeSent(@NonNull String s ,@NonNull PhoneAuthProvider.ForceResendingToken token){
-            super.onCodeSent(s,token);
-            verificationID = s;
-        }
-    };
-
-    private void verifyPhone(String code) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID ,code);
-        signInByCredential(credential);
-    }
-
-    private void signInByCredential(PhoneAuthCredential credential) {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    Toast.makeText(Authentication.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Authentication.this,MainActivity.class);
-                    startActivity(intent);
-                }else {
-                    Toast.makeText(getApplicationContext(),task.getException().getMessage().toString(),Toast.LENGTH_LONG).show();
-                }
+                    finish();
+                },1000);
+            }else {
+                LoginView.setVisibility(View.GONE);
+                ProgressBarView.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(),Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void checkConditionsAndEnableButton() {
-        TextInputEditText mobileNumberEditText = findViewById(R.id.mobileNumber);
-        RadioGroup roleRadioGroup = findViewById(R.id.radio);
-        Button submitButton = findViewById(R.id.getOTP);
-        boolean isMobileNumberEntered = !TextUtils.isEmpty(mobileNumberEditText.getText());
-        boolean isRoleSelected = roleRadioGroup.getCheckedRadioButtonId() != -1;
-        boolean isLength =false ;
-        if(mobileNumberEditText.getText().length() == 10){
-            isLength=true;
-        };
-        if(isMobileNumberEntered && isRoleSelected && isLength){
+        boolean isMobileNumberEntered = !TextUtils.isEmpty(mobileNumber.getText());
+        boolean isPasswordEntered = !TextUtils.isEmpty(LoginPassword.getText());
+        boolean isRoleSelected = radioGroup.getCheckedRadioButtonId() != -1;
+        boolean isLength = mobileNumber.getText().length() == 10;
+
+        Button submitButton = findViewById(R.id.LoginUser);
+        submitButton.setEnabled(isMobileNumberEntered && isRoleSelected && isLength);
+
+        if (isMobileNumberEntered && isPasswordEntered && isRoleSelected && isLength) {
             submitButton.setTextColor(getResources().getColor(R.color.white));
             submitButton.setBackgroundColor(getResources().getColor(R.color.blue));
-        }else {
+        } else {
             submitButton.setTextColor(getResources().getColor(R.color.white));
             submitButton.setBackgroundColor(getResources().getColor(R.color.grey));
-            submitButton.setEnabled(false);
-        }
-        submitButton.setEnabled(isMobileNumberEntered && isRoleSelected);
-    }
-    @Override
-    public void onStart(){
-        super.onStart();
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null){
-            Intent intent = new Intent(Authentication.this,MainActivity.class);
-            startActivity(intent);
-            finish();
         }
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode==REQUEST_PERMISSION_CODE){
-            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED ){
 
-            }else {
-                Toast.makeText(getApplicationContext(),"Permissions Denied , Allow permissions to continue",Toast.LENGTH_LONG).show();
-            }
-        }
-    }
+
+
 }
