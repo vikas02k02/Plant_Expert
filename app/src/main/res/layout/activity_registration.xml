@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Validation.Authentication">
+    tools:context=".Validation.Registration">
 
     <TextView
         android:id="@+id/textView"
@@ -18,15 +18,58 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-<!--Mobile Number Input Field    -->
+<!--    Full Name Input Text-->
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/FullNameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Mobile Number"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/LoginPasswordLayout"
+        android:hint="Full Name"
+        app:layout_constraintBottom_toTopOf="@+id/PlaceNameLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLength="60"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+<!--    Place Name Input Text-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/PlaceNameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="Place Name"
+        app:layout_constraintBottom_toTopOf="@+id/MobileNumberLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/cityName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLength="40"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+<!--Mobile Number Input Text-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/MobileNumberLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="Mobile Number"
+        app:layout_constraintBottom_toTopOf="@+id/PasswordLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -35,33 +78,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:maxLength="10"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:maxLength="10" />
     </com.google.android.material.textfield.TextInputLayout>
 
-<!--    Password Input Field -->
+<!--Password Input Text-->
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/LoginPasswordLayout"
+        android:id="@+id/PasswordLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:hint="Password( Must be > 5 digits )"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/LoginPassword"
+            android:id="@+id/Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:maxLength="10"
-            android:inputType="numberPassword" />
+            android:inputType="numberPassword"
+            android:maxLength="10" />
     </com.google.android.material.textfield.TextInputLayout>
 
-<!--    Role Radio Button Field -->
+<!--    Role Radio Button -->
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -106,10 +149,7 @@
 
         </RadioGroup>
 
-
     </LinearLayout>
-
-<!-- Login Button-->
 
     <Button
         android:id="@+id/LoginUser"
@@ -120,7 +160,7 @@
         android:layout_marginEnd="30dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:text="Login"
+        android:text="Register"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/white"
         android:textStyle="bold"
@@ -135,7 +175,7 @@
         app:strokeColor="#A8ACAE" />
 
     <View
-        android:id="@+id/LoginView"
+        android:id="@+id/registerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#A4DDDDDD"
@@ -145,8 +185,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+
     <LinearLayout
-        android:id="@+id/progressBarView"
+        android:id="@+id/progressView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -177,19 +219,20 @@
             android:layout_gravity="center"/>
     </LinearLayout>
 
-<!--    New User Register Button-->
+<!--    Existing User Login button -->
 
     <TextView
-    android:id="@+id/NewUser"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Don't have an account ?  Register"
-    android:textColor="#FF80AB"
-    android:textSize="17sp"
-    android:textStyle="bold"
-    app:layout_constraintTop_toBottomOf="@+id/LoginUser"
-    app:layout_constraintStart_toStartOf="parent"
-    android:layout_marginStart="30dp"
-    android:layout_marginTop="5dp" />
+        android:id="@+id/AlreadyUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Already have an account ?  Login"
+        android:textColor="#FF80AB"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/LoginUser"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
