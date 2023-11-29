@@ -1,8 +1,11 @@
 package com.plantExpert.UI;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
@@ -17,6 +20,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -34,6 +38,8 @@ import com.plantExpert.data.Registration.UsersDetails;
 
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class ProfileFragment extends Fragment {
     private TextInputEditText Name ,PhoneNumber ,City ,NewPassword ,ConfirmPassword,CurrentPassword;
@@ -41,9 +47,10 @@ public class ProfileFragment extends Fragment {
     DatabaseReference reference;
     FirebaseDatabase database;
     View BackgroundView ,LoadingView;
-    Button submitPassword;
+    Button submitPassword,AddProfile;
     LinearLayout PasswordView ,ProgressBarView ;
     ConstraintLayout LanguageChangeView;
+    CircleImageView profilePic;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -58,8 +65,10 @@ public class ProfileFragment extends Fragment {
         PhoneNumber=root.findViewById(R.id.FarmerPhoneNumber);
         City =root.findViewById(R.id.FarmerCity);
         Button saveButton = root.findViewById(R.id.Save);
+        AddProfile = root.findViewById(R.id.addPicture);
         BackgroundView = root.findViewById(R.id.BackgroundView);
         PasswordView =root.findViewById(R.id.PasswordView);
+        profilePic = root.findViewById(R.id.FarmerPhoto);
         LanguageChangeView = root.findViewById(R.id.SelectLanguageView);
         Button hindiApp = root.findViewById(R.id.HindiApp);
         Button englishApp = root.findViewById(R.id.EnglishApp);
@@ -251,6 +260,18 @@ public class ProfileFragment extends Fragment {
                }
             }
         });
+        AddProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImagePicker.with(ProfileFragment.this)
+                        .crop()	    			//Crop image(Optional), Check Customization for more option
+                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                        .start();
+            }
+        });
+
+
 
         return root;
     }
@@ -277,4 +298,11 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Uri uri =data.getData();
+        profilePic.setImageURI(uri);
+
+    }
 }
